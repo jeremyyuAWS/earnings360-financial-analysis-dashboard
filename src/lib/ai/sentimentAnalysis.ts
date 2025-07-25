@@ -6,25 +6,29 @@ interface SentimentResult {
 }
 
 export async function analyzeSentiment(text: string): Promise<SentimentResult> {
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [
-      {
-        role: "system",
-        content: `Analyze the sentiment of the following financial text. Consider:
-          - Overall tone
-          - Key phrases indicating sentiment
-          - Forward-looking statements
-          - Risk disclosures
-          Return a JSON object with score, label, confidence, and key phrases.`
-      },
-      {
-        role: "user",
-        content: text
-      }
-    ],
-    response_format: { type: "json_object" }
-  });
+  // Simulate sentiment analysis for demo purposes
+  await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
+  
+  const score = Math.random() * 2 - 1; // Random score between -1 and 1
+  const confidence = Math.random() * 0.3 + 0.7; // Random confidence between 0.7 and 1
+  
+  const label: 'positive' | 'negative' | 'neutral' = 
+    score > 0.2 ? 'positive' : 
+    score < -0.2 ? 'negative' : 
+    'neutral';
 
-  return JSON.parse(completion.choices[0].message.content);
+  const keyPhrases = [
+    'strong performance',
+    'market growth',
+    'revenue increase',
+    'operational efficiency',
+    'strategic initiatives'
+  ];
+
+  return {
+    score,
+    label,
+    confidence,
+    keyPhrases: keyPhrases.slice(0, Math.floor(Math.random() * 3) + 2)
+  };
 }
